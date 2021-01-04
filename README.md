@@ -1,1 +1,1 @@
-# Photomap
+# PhotomapHITest
