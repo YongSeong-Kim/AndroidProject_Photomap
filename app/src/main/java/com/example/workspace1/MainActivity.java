@@ -13,11 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
-    public void liveSearchRank(View v)
-    {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://datalab.naver.com/keyword/realtimeList.naver"));
-        startActivity(intent);
-    }
 }
