@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <group android:checkableBehavior="single">
+        <!--        위에 무슨뜻일까?-->
+        <item
+            android:id="@+id/map"
+            android:icon="@drawable/ic_launcher_foreground"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="지도"
+            />
         <item
             android:id="@+id/account"
             android:icon="@drawable/ic_launcher_foreground"
@@ -9,16 +16,30 @@
             android:title="계정"
             />
         <item
+            android:id="@+id/feed"
+            android:icon="@drawable/ic_launcher_foreground"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="현재피드보기"
+            />
+        <item
+            android:id="@+id/popular"
+            android:icon="@drawable/ic_launcher_foreground"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="인기글"
+            />
+
+        <item
+            android:id="@+id/favorite"
+            android:icon="@drawable/ic_launcher_foreground"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="즐겨찾기"
+            />
+
+        <item
             android:id="@+id/setting"
             android:icon="@drawable/ic_launcher_foreground"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:title="설정"
-            />
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/ic_launcher_foreground"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:title="로그아웃"
             />
     </group>
 </menu>

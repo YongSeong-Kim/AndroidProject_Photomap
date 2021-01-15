@@ -7,15 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <fragment
-            android:id="@+id/map"
-            android:name="com.naver.maps.map.MapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <include
             layout = "@layout/tool_bar"/>
 
@@ -25,14 +20,23 @@
             android:layout_height="2dp"
             android:background="@android:color/black"
             android:layout_below="@+id/toolbar"/>
-    </RelativeLayout>
 
-    <TextView
-        android:layout_width="300dp"
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Success"
-        android:textSize="50sp"
-        android:background="@color/white"
-        android:layout_gravity="left"/>
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/navi_header"
+        app:menu="@layout/navi_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
