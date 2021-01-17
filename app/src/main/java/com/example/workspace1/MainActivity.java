@@ -39,19 +39,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationSource mLocationSource;
     private NaverMap mNaverMap;
 
-
-//    private static final String[] PERMISSIONS = {
-//            Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // inflater
 
+
         Intent intent = new Intent(this, LoadingActivity.class);
-        startActivity(intent);
+        startActivity(intent);//로딩화면
+
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
 

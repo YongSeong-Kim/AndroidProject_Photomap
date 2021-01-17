@@ -3,6 +3,7 @@
     package="com.example.workspace1">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
 
     <application
@@ -11,8 +12,11 @@
         android:label="Photomap"
         android:roundIcon="@mipmap/ic_launcher_apple_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Workspace1">
+        android:theme="@style/Theme.Workspace1"
+        android:usesCleartextTraffic="true">
 
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".LoginActivity" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -25,10 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".LoadingActivity">
-        </activity>
+        <activity android:name=".LoadingActivity" />
     </application>
 
 </manifest>
