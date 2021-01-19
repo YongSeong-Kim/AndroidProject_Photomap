@@ -7,9 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginActivity extends AppCompatActivity {
     private EditText et_id, et_pass;
     private Button btn_login, btn_register;
+    private String username, password;
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
 
+        queue = Volley.newRequestQueue(this);
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,9 +43,53 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-//        btn_login.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                String url = "";
+//
+//                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//
+//                        try {
+//                            username = response.getString("username");
+//                            password = response.getString("password");
+//                            boolean success = response.getBoolean("success");
+//                            if (success) { // 로그인에 성공한 경우
+//                                String userID = response.getString("userID");
+//                                String userPass = response.getString("userPassword");
+//
+//                                Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+////                                intent.putExtra("userID", userID);
+////                                intent.putExtra("userPass", userPass);
+//                                startActivity(intent);
+//                            } else { // 로그인에 실패한 경우
+//                                Toast.makeText(getApplicationContext(),"로그인에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//
+//                    }
+//                });
+//
+//                queue.add(jsonRequest);
+
+                Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                startActivity(intent);
+
 //                // EditText에 현재 입력되어있는 값을 get(가져온다)해온다.
 //                String userID = et_id.getText().toString();
 //                String userPass = et_pass.getText().toString();
@@ -62,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                };
+
 //                LoginRequest loginRequest = new LoginRequest(userID, userPass, responseListener);
 //                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
 //                queue.add(loginRequest);
@@ -69,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 //
 //
 //
-//            }
-//        });
+            }
+        });
     }
 }

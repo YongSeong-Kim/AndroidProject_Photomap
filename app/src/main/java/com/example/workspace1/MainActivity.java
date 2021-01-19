@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main); // inflater
 
 
-        Intent intent = new Intent(this, LoadingActivity.class);
-        startActivity(intent);//로딩화면
-
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
+//        Intent intent = new Intent(this, LoadingActivity.class);
+//        startActivity(intent);//로딩화면
+//
+//        Intent loginIntent = new Intent(this, LoginActivity.class);
+//        startActivity(loginIntent);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
