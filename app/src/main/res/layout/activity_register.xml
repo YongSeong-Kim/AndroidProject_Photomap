@@ -8,74 +8,7 @@
 
 
     <EditText
-        android:id="@+id/et_maj"
-
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="전공"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_hak" />
-
-    <Button
-        android:id="@+id/validateButton"
-
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginTop="144dp"
-        android:layout_marginEnd="16dp"
-        android:text="중복확인"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/et_age"
-
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="나이"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
-
-    <EditText
-        android:id="@+id/et_name"
-
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="이름"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_passck" />
-
-    <EditText
-        android:id="@+id/et_hak"
-
-        android:layout_width="200dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="학번"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_age" />
-
-    <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/r_email"
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:layout_marginTop="144dp"
@@ -87,8 +20,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/validateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="16dp"
+        android:text="중복확인"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <EditText
-        android:id="@+id/et_pass"
+        android:id="@+id/r_pass"
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:layout_marginTop="4dp"
@@ -98,10 +42,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+        app:layout_constraintTop_toBottomOf="@+id/r_email" />
 
     <EditText
-        android:id="@+id/et_passck"
+        android:id="@+id/r_passck"
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:layout_marginTop="4dp"
@@ -111,11 +55,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_pass" />
+        app:layout_constraintTop_toBottomOf="@+id/r_pass" />
+
+    <EditText
+        android:id="@+id/r_name"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="이름"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r_passck" />
+
+    <EditText
+        android:id="@+id/r_age"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="나이"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r_name" />
+
+    <EditText
+        android:id="@+id/r_hak"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="학번"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r_age" />
+
+    <EditText
+        android:id="@+id/r_maj"
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:hint="전공"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/r_hak" />
 
     <Button
-        android:id="@+id/btn_register"
-
+        android:id="@+id/r_btn_register"
         android:layout_width="200dp"
         android:layout_height="45dp"
         android:layout_marginTop="4dp"
@@ -123,6 +118,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_maj" />
+        app:layout_constraintTop_toBottomOf="@+id/r_maj" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
