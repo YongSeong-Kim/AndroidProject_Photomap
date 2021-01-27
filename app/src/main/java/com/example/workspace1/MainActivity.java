@@ -7,11 +7,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -22,7 +25,10 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.*;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.CompassView;
 import com.naver.maps.map.widget.LocationButtonView;
@@ -45,13 +51,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main); // inflater
 
 
-//        Intent intent = new Intent(this, LoadingActivity.class);
-//        startActivity(intent);//로딩화면
-//
-//        Intent loginIntent = new Intent(this, LoginActivity.class);
-//        startActivity(loginIntent);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
 
         toolbar = (Toolbar) findViewById((R.id.toolbar));
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                  if(!drawer.isDrawerOpen(Gravity.LEFT))
                      drawer.openDrawer(Gravity.LEFT);
              }
-
          });
 
         MapNaver = new MapNaver();
@@ -85,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         mLocationSource =
                 new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
+
+
 
 
 
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
     }
 
 
@@ -147,31 +147,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.d("dd","dd");
                             mapFragment = MapFragment.newInstance();
                         }
-
                         mapFragment.getMapAsync(this);
-
                         fragment = mapFragment;
-
                         break;
                     case 2:
                         fragment = Account;
-
-                    break;
+                        break;
                     case 3:
                         fragment = Favorite;
-
                         break;
                     case 4:
                         fragment = Feed;
-
                         break;
                     case 5:
                         fragment = Popular;
-
                         break;
                     case 6:
                         fragment = Setting;
-
                         break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
@@ -179,7 +171,81 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+
         mNaverMap = naverMap;
+
+        InfoWindow infoWindow = new InfoWindow();
+        Marker marker1 = new Marker();
+        marker1.setPosition(new LatLng(37.5670135, 126.9783740));
+        marker1.setMap(mNaverMap);
+        marker1.setWidth(100);
+        marker1.setHeight(100);
+        marker1.setIcon(OverlayImage.fromResource(R.drawable.marker));
+
+
+        Marker marker2 = new Marker();
+        marker2.setPosition(new LatLng(37.56, 126.97));
+        marker2.setMap(mNaverMap);
+        marker2.setWidth(100);
+        marker2.setHeight(100);
+        marker2.setIcon(OverlayImage.fromResource(R.drawable.marker));
+
+
+        mNaverMap.setOnMapClickListener((coord,point)->{//지도를 클릭하면 닫.
+            infoWindow.close();
+        });
+
+        Overlay.OnClickListener listener = overlay ->// 마커를 클릭하면 열리고 아니면 닫힘.
+        {
+            Marker marker = (Marker) overlay;
+
+            if (marker.getInfoWindow() == null)
+            {
+                infoWindow.open(marker);
+            }
+            else
+            {
+                infoWindow.close();
+            }
+            return true;
+        };
+
+        marker1.setOnClickListener(listener);
+        marker2.setOnClickListener(listener);
+
+
+        infoWindow.setAdapter(new InfoWindow.DefaultViewAdapter(this) {
+            @NonNull
+            @Override
+            protected View getContentView(@NonNull InfoWindow infoWindow) {
+
+                View view = View.inflate(MainActivity.this, R.layout.photo_point, null);
+                TextView txtTitle = (TextView) view.findViewById(R.id.txttitle);
+                ImageView imagePoint = (ImageView) view.findViewById(R.id.imagepoint);
+
+                txtTitle.setText("강릉");
+                imagePoint.setImageResource(R.drawable.example);
+
+                return view;
+            }
+        });
+
+
+//        naverMap.setOnMapLongClickListener(
+//
+//                (point, coord) ->
+//                Toast.makeText(this, coord.latitude + ", " + coord.longitude,
+//                        Toast.LENGTH_SHORT).show()
+//
+//        );
+        naverMap.setOnMapLongClickListener(new NaverMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+
+                Intent intent = new Intent(MainActivity.this, PhotoRegister.class);
+            }
+        });
+
         mNaverMap.setLocationSource(mLocationSource);
         UiSettings uiSettings = mNaverMap.getUiSettings();
         uiSettings.setZoomControlEnabled(true); // 기본값 : true
@@ -201,24 +267,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRequestPermissionsResult(
                 requestCode, permissions, grantResults);
     }
-//    @Override
-//    public void onMapReady(@NonNull NaverMap naverMap) {
-//
-//        Log.d("여기","여기");
-//        Marker marker = new Marker();
-//        marker.setPosition(new LatLng(35.5670135, 126.9783740));
-//        marker.setMap(naverMap);
-//
-//
-//
-//
-//        mNaverMap = naverMap;
-//        mNaverMap.setLocationSource(mLocationSource);
-//
-//        UiSettings uiSettings = mNaverMap.getUiSettings();
-//
-//        uiSettings.setScaleBarEnabled(true);
-//        uiSettings.setCompassEnabled(true);
-//
-//    }
+
+
+
 }

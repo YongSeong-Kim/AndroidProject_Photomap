@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("password", l_pass.getText().toString());
                 JSONObject parameters = new JSONObject(params);
 
-
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, parameters, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -96,12 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 queue.add(jsonRequest);
-
-
-//                Toast.makeText(getApplicationContext(),"로그인에 성공하였습니다.",Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//
-//                startActivity(intent);
 
             }
         });
