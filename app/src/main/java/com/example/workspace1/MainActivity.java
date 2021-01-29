@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         fragment = Setting;
                         break;
         }
+
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (marker.getInfoWindow() == null)
             {
+
                 infoWindow.open(marker);
             }
             else
@@ -231,18 +233,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-//        naverMap.setOnMapLongClickListener(
-//
-//                (point, coord) ->
-//                Toast.makeText(this, coord.latitude + ", " + coord.longitude,
-//                        Toast.LENGTH_SHORT).show()
-//
-//        );
         naverMap.setOnMapLongClickListener(new NaverMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
 
+                Toast.makeText(context, latLng.longitude+ "\n" +latLng.latitude, Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(MainActivity.this, PhotoRegister.class);
+                intent.putExtra("latitude",latLng.latitude);
+                intent.putExtra("longtitude",latLng.longitude);
+                startActivity(intent);
             }
         });
 

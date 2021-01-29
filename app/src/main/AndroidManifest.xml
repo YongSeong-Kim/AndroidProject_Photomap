@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Workspace1"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PhotoRegister"></activity>
+
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -22,6 +22,9 @@
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".LoadingActivity" />
+        <activity android:name=".PhotoRegister"
+            android:theme="@android:style/Theme.Holo.Dialog"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
