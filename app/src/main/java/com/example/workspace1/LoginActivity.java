@@ -51,13 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                String userPass = et_pass.getText().toString();
-//                String email = et_email.getText().toString();
-//                String userName = et_name.getText().toString();
-
-
                 String url = "http://35.238.98.83:8000/user/login/";
-
 
                 Map<String, String> params = new HashMap<String, String>();
                 Log.d("유저네임", "들어갑니다.");
@@ -82,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"로그인에 실패하였습니다.",Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

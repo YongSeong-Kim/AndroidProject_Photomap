@@ -44,15 +44,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                String userPass = et_pass.getText().toString();
-//                String email = et_email.getText().toString();
-//                String userName = et_name.getText().toString();
-//                int userAge = Integer.parseInt(et_age.getText().toString());
-
                 String url = "http://35.238.98.83:8000/user/signin/";
 
                 Map<String, String> params = new HashMap<String, String>();
-                Log.d("유저네임", "들어갑니다.");
+
                 params.put("username", r_name.getText().toString());
                 params.put("email", r_email.getText().toString());
                 params.put("password", r_pass.getText().toString());

@@ -1,50 +1,41 @@
 package com.example.workspace1;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.content.CursorLoader;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import androidx.loader.content.CursorLoader;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoRegister extends Activity {
     private static final int REQUEST_CODE = 0;
     private ImageView imageView;
     String imgPath;
-    private RequestQueue queue;
+    private FileUploadAPI FileUploadApi;
+    private String base_url = "http://10.0.2.2:8000/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +45,7 @@ public class PhotoRegister extends Activity {
         setContentView(R.layout.activity_photo_register);
 
 
-        Log.d("이거 에러1","이거 에러1");
+
         imageView = findViewById(R.id.temp_photo);
 
         imageView.setOnClickListener(new View.OnClickListener(){
@@ -116,126 +107,68 @@ public class PhotoRegister extends Activity {
 
     public void mOnClose(View v)
     {
-        String crlf = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-
         if(imageView.getDrawable() == null)
         {
             Toast.makeText(this, "등록하실 이미지가 없습니다.", Toast.LENGTH_LONG).show();
-
         }
         else
         {
-
-//            HttpURLConnection httpUrl = null;
-//            URL url = null;
-//            try {
-//                url = new URL("http://35.238.98.83:8000/photo/post/");
-//                httpUrl = (HttpURLConnection) url.openConnection();
-//                httpUrl.setUseCaches(false);
-//                httpUrl.setDoOutput(true);
-//
-//                httpUrl.setRequestMethod("POST");
-//                httpUrl.setRequestProperty("Connection", "Keep-Alive");
-//                httpUrl.setRequestProperty("Cache-Control", "no-cache");
-//                httpUrl.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-//
-//                DataOutputStream request = new DataOutputStream(httpUrl.getOutputStream());
-//
-//                request.writeBytes
-//
-//            } catch (MalformedURLException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-//            queue = Volley.newRequestQueue(this);
-//            EditText temp_title,temp_content;
-//            temp_title = findViewById(R.id.temp_title);
-//            temp_content = findViewById(R.id.temp_content);
-//
-//            String title= temp_title.getText().toString();
-//            String content= temp_content.getText().toString();
-//
-//            //안드로이드에서 보낼 데이터를 받을 php 서버 주소
-//            String url="http://35.238.98.83:8000/photo/post/";
-//
-//            Intent tempIntent = getIntent();
-//            double lat = tempIntent.getDoubleExtra("latitude",0);
-//            double longti = tempIntent.getDoubleExtra("longtitude",0);
-//
-//            Toast.makeText(PhotoRegister.this, lat +"\n"+ longti, Toast.LENGTH_SHORT).show();
-//
-//            Map<String, String> params = new HashMap<String, String>();
-//            Log.d("유저네임", "들어갑니다.");
-//
-//            params.put("image",imgPath);
-//
-//            params.put("latitude", Double.toString(lat));
-//            params.put("longtitude", Double.toString(longti));
-//
-//            JSONObject parameters = new JSONObject(params);
-//
-//            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, parameters, new Response.Listener<JSONObject>() {
-//                @Override
-//                public void onResponse(JSONObject response) {
-//
-//                    try {
-//                        if(response.getString("message").equals("SUCCESS"))
-//
-//                            Toast.makeText(PhotoRegister.this, "응답", Toast.LENGTH_LONG).show();
-//
-//
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//
-//                }
-//            });
-//
-//            queue.add(jsonRequest);
-
-//            SimpleMultiPartRequest smpr= new SimpleMultiPartRequest(Request.Method.POST, serverUrl, new Response.Listener<String>() {
-//                @Override
-//                public void onResponse(String response) {
-//                    new AlertDialog.Builder(PhotoRegister.this).setMessage("응답:"+response).create().show();
-//                }
-//            }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    Toast.makeText(PhotoRegister.this, "ERROR", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            //요청 객체에 보낼 데이터를 추가
-////            smpr.addStringParam("title", title);
-////            smpr.addStringParam("content", content);
-//
-//            Intent tempIntent = getIntent();
-//            int lat = tempIntent.getIntExtra("latitude",0);
-//            int longti = tempIntent.getIntExtra("longtitude",0);
-//            Toast.makeText(PhotoRegister.this, lat + longti, Toast.LENGTH_SHORT).show();
-//
-//            smpr.addStringParam("latitude", lat);
-//            smpr.addStringParam("longtitude", longti);
-//            //이미지 파일 추가
-//            smpr.addFile("img", imgPath);
-//
-//            //요청객체를 서버로 보낼 우체통 같은 객체 생성
-//            RequestQueue requestQueue= Volley.newRequestQueue(this);
-//            requestQueue.add(smpr);
-
+            Log.d("1","s");
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(base_url)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            FileUploadApi = retrofit.create(FileUploadAPI.class);
+            createPost();
             Toast.makeText(this, "안녕", Toast.LENGTH_LONG).show();
-
         }
+
+
         finish();
+    }
+
+    private void createPost() {
+
+//        File filesDir = getApplicationContext().getFilesDir();
+//        File file = new File(filesDir, "image" + ".png");
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+//        byte[] bitmapdata = bos.toByteArray();
+//        FileOutputStream fos = new FileOutputStream(file);
+//        fos.write(bitmapdata);
+//        fos.flush();
+//        fos.close();
+        Log.d("2","s");
+        File file = new File(imgPath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("image", imgPath, requestFile);
+
+        RequestBody lati = RequestBody.create(MediaType.parse("text/plain"), "u101");
+
+        RequestBody longti = RequestBody.create(MediaType.parse("text/plain"), "u101");
+
+        final Call<ResponseBody> upload = FileUploadApi.createPost(uploadFile, longti, lati);
+
+        upload.enqueue(new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            Log.d("3","s");
+            if (!response.isSuccessful()) {
+                Toast.makeText(PhotoRegister.this,  "code " + response.code(), Toast.LENGTH_LONG).show();
+                return;
+            }
+            String content = "";
+            content += "Code : " + response.code() + "\n";
+            Toast.makeText(PhotoRegister.this,  content, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            Toast.makeText(PhotoRegister.this,  "Wrong", Toast.LENGTH_LONG).show();
+        }
+
+        });
+        Log.d("4","s");
     }
 
 }
