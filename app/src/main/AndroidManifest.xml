@@ -11,13 +11,14 @@
         android:label="Photomap"
         android:roundIcon="@mipmap/ic_launcher_apple_round"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.Workspace1"
         android:usesCleartextTraffic="true">
 
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="ipfvfn2nx3" />
+            android:value="696vjh50sy" />
 
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".LoginActivity" />

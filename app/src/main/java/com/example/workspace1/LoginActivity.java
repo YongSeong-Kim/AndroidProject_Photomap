@@ -56,14 +56,16 @@ public class LoginActivity extends AppCompatActivity {
 //                String userName = et_name.getText().toString();
 
 
-                String url = "http://35.238.98.83:8000/user/login/";
+                String url = "http://192.168.75.198:8000/user/login/";
 
 
                 Map<String, String> params = new HashMap<String, String>();
                 Log.d("유저네임", "들어갑니다.");
                 params.put("username", l_id.getText().toString());
+                Log.d("test", l_id.getText().toString());
                 params.put("email", "");
                 params.put("password", l_pass.getText().toString());
+                Log.d("test", l_pass.getText().toString());
                 JSONObject parameters = new JSONObject(params);
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, parameters, new Response.Listener<JSONObject>() {

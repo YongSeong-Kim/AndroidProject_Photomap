@@ -22,7 +22,7 @@ public class LoadingActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                startActivity(intent);
+                startActivity(intent)   ;
                 finish();
             }
         }, 2000);

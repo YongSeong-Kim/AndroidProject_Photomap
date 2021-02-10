@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                String userName = et_name.getText().toString();
 //                int userAge = Integer.parseInt(et_age.getText().toString());
 
-                String url = "http://35.238.98.83:8000/user/signin/";
+                String url = "http://192.168.75.198:8000/user/signin/";
 
                 Map<String, String> params = new HashMap<String, String>();
                 Log.d("유저네임", "들어갑니다.");
