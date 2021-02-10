@@ -14,11 +14,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText r_email, r_pass, r_name, r_age;
@@ -44,7 +52,39 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String url = "http://35.238.98.83:8000/user/signin/";
+                String url =  "http://10.0.2.2:8000/user/signin/";
+                String base_url =  "http://10.0.2.2:8000";
+
+
+
+//                Retrofit retrofit = new Retrofit.Builder()
+//                        .baseUrl(base_url)
+//                        .addConverterFactory(ScalarsConverterFactory.create())
+//                        .build();
+//
+//                FileUploadAPI api = retrofit.create(FileUploadAPI.class);
+//
+//                HashMap<String, String> params = new HashMap<String, String>();
+//                params.put("username", r_name.getText().toString());
+//                params.put("email", r_email.getText().toString());
+//                params.put("password", r_pass.getText().toString());
+//
+//
+//                api.getUserRegister(params).enqueue(new Callback<RegisterValue>() {
+//                    @Override
+//                    public void onResponse(Call<RegisterValue> call, Response<RegisterValue> response) {
+//                        if(response.isSuccessful())
+//                        {
+//                            Log.e("onSuccess", response.message());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<RegisterValue> call, Throwable t) {
+//                        Log.e("fail", call.toString());
+//                    }
+//                });
+
 
                 Map<String, String> params = new HashMap<String, String>();
 
@@ -53,14 +93,13 @@ public class RegisterActivity extends AppCompatActivity {
                 params.put("password", r_pass.getText().toString());
                 JSONObject parameters = new JSONObject(params);
 
-                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, parameters, new Response.Listener<JSONObject>() {
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, parameters, new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
                         try {
-                        if(response.getString("message").equals("SUCCESS"))
+                            if(response.getString("message").equals("SUCCESS"))
 
-                            Log.d("Debug", response.getString("message"));
+                                Log.d("Debug", response.getString("message"));
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
 
@@ -68,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
+                }, new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 

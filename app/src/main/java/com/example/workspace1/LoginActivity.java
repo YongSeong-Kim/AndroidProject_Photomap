@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String url = "http://35.238.98.83:8000/user/login/";
+                String url = "http://10.0.2.2:8000/user/login/";
 
                 Map<String, String> params = new HashMap<String, String>();
                 Log.d("유저네임", "들어갑니다.");

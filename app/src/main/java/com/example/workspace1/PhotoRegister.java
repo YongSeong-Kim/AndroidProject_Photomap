@@ -3,7 +3,10 @@ package com.example.workspace1;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -14,10 +17,25 @@ import android.widget.Toast;
 
 import androidx.loader.content.CursorLoader;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Hashtable;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -34,8 +52,14 @@ public class PhotoRegister extends Activity {
     private static final int REQUEST_CODE = 0;
     private ImageView imageView;
     String imgPath;
-    private FileUploadAPI FileUploadApi;
-    private String base_url = "http://10.0.2.2:8000/";
+    private RequestQueue queue;
+    HttpURLConnection con = null;
+    String boundary = "******";
+    String crlf = "\r\n";
+    String twoHyphens = "--";
+    OutputStream httpConnOutputStream;
+    Uri uri;
+    Intent temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +67,6 @@ public class PhotoRegister extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_photo_register);
-
-
 
         imageView = findViewById(R.id.temp_photo);
 
@@ -64,27 +86,14 @@ public class PhotoRegister extends Activity {
         if(requestCode == REQUEST_CODE)
         {
             if(resultCode == RESULT_OK) {
-                Uri uri = data.getData();
+                temp = data;
+                uri = data.getData();
                 if (uri != null) {
                     imageView.setImageURI(uri);
-
-                    //갤러리앱에서 관리하는 DB정보가 있는데, 그것이 나온다 [실제 파일 경로가 아님!!]
-                    //얻어온 Uri는 Gallery앱의 DB번호임. (content://-----/2854)
-                    //업로드를 하려면 이미지의 절대경로(실제 경로: file:// -------/aaa.png 이런식)가 필요함
                     //Uri -->절대경로(String)로 변환
                     imgPath = getRealPathFromUri(uri);
                     Toast.makeText(this, imgPath, Toast.LENGTH_LONG).show();
-//                    try{
-//                    InputStream in = getContentResolver().openInputStream(data.getData());
-//
-//                    Bitmap img = BitmapFactory.decodeStream(in);
-//                    in.close();
-//
-//                    imageView.setImageBitmap(img);
-//                }catch(Exception e)
-//                {
-//
-//                }
+
                 }
             }
             else if(resultCode == RESULT_CANCELED)
@@ -105,70 +114,93 @@ public class PhotoRegister extends Activity {
             return  result;
     }
 
-    public void mOnClose(View v)
-    {
+    public void mOnClose(View v) throws IOException {
+
         if(imageView.getDrawable() == null)
         {
             Toast.makeText(this, "등록하실 이미지가 없습니다.", Toast.LENGTH_LONG).show();
         }
         else
         {
-            Log.d("1","s");
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(base_url)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            FileUploadApi = retrofit.create(FileUploadAPI.class);
-            createPost();
-            Toast.makeText(this, "안녕", Toast.LENGTH_LONG).show();
+            new Thread()
+            {
+                public void run()
+                {
+                    try {
+                        upload();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }.start();
         }
 
-
-        finish();
     }
 
-    private void createPost() {
+    public void upload() throws IOException {
 
-//        File filesDir = getApplicationContext().getFilesDir();
-//        File file = new File(filesDir, "image" + ".png");
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
-//        byte[] bitmapdata = bos.toByteArray();
-//        FileOutputStream fos = new FileOutputStream(file);
-//        fos.write(bitmapdata);
-//        fos.flush();
-//        fos.close();
-        Log.d("2","s");
-        File file = new File(imgPath);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("image", imgPath, requestFile);
 
-        RequestBody lati = RequestBody.create(MediaType.parse("text/plain"), "u101");
+        URL url = new URL("http://10.0.2.2:8000/photo/post/");
 
-        RequestBody longti = RequestBody.create(MediaType.parse("text/plain"), "u101");
 
-        final Call<ResponseBody> upload = FileUploadApi.createPost(uploadFile, longti, lati);
+        con = (HttpURLConnection) url.openConnection();
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setUseCaches(false);
 
-        upload.enqueue(new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            Log.d("3","s");
-            if (!response.isSuccessful()) {
-                Toast.makeText(PhotoRegister.this,  "code " + response.code(), Toast.LENGTH_LONG).show();
-                return;
-            }
-            String content = "";
-            content += "Code : " + response.code() + "\n";
-            Toast.makeText(PhotoRegister.this,  content, Toast.LENGTH_LONG).show();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Connection", "Keep-Alive");
+        con.setRequestProperty("Cache-Control", "no-cache");
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"latitude\"" + crlf+crlf);
+
+        wr.writeBytes("10" + crlf);
+
+
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"longtitude\"" + crlf+crlf);
+
+        wr.writeBytes("10" + crlf);
+
+        InputStream in = getContentResolver().openInputStream(temp.getData());
+
+        Bitmap bitmap = BitmapFactory.decodeStream(in);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] bytes = stream.toByteArray();
+
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"image\";filename=\" good.png\""+crlf);
+        wr.writeBytes("Content-Type:image/png" + crlf);
+        wr.writeBytes(crlf);
+        wr.write(bytes);
+
+        wr.writeBytes(twoHyphens + boundary + twoHyphens + crlf);
+        wr.flush();
+        wr.close();
+
+
+        int status = con.getResponseCode();
+
+        InputStream responseStream = new BufferedInputStream(con.getInputStream());
+        BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+        String line = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        while((line = responseStreamReader.readLine()) !=null)
+        {
+            stringBuilder.append(line).append("\n");
         }
+        responseStreamReader.close();
+        String s = stringBuilder.toString();
 
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            Toast.makeText(PhotoRegister.this,  "Wrong", Toast.LENGTH_LONG).show();
-        }
+        Log.d("상태코드", Integer.toString(status));
 
-        });
-        Log.d("4","s");
+        finish();
     }
 
 }
