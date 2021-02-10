@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.workspace1.user.LoginActivity;
+
 public class LoadingActivity extends AppCompatActivity {
 
     @Override

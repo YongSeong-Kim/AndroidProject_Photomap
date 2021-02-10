@@ -18,12 +18,12 @@
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="696vjh50sy" />
+            android:value="696vjh50sy"/>
 
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".user.RegisterActivity"></activity>
+        <activity android:name=".user.LoginActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".PhotoRegister"
+        <activity android:name=".map.PhotoRegister"
             android:theme="@android:style/Theme.Holo.Dialog"/>
 
         <activity android:name=".LoadingActivity">

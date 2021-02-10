@@ -1,27 +1,21 @@
-package com.example.workspace1;
+package com.example.workspace1.sidetabs;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.naver.maps.map.MapFragment;
-import com.naver.maps.map.MapView;
-import com.naver.maps.map.NaverMap;
-import com.naver.maps.map.OnMapReadyCallback;
-import com.naver.maps.map.UiSettings;
+import com.example.workspace1.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MapNaver#newInstance} factory method to
+ * Use the {@link Favorite#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapNaver extends Fragment {
+public class Favorite extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,8 +26,7 @@ public class MapNaver extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
-    public MapNaver() {
+    public Favorite() {
         // Required empty public constructor
     }
 
@@ -43,11 +36,11 @@ public class MapNaver extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NaverMap.
+     * @return A new instance of fragment favorite.
      */
     // TODO: Rename and change types and number of parameters
-    public static MapNaver newInstance(String param1, String param2) {
-        MapNaver fragment = new MapNaver();
+    public static Favorite newInstance(String param1, String param2) {
+        Favorite fragment = new Favorite();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,8 +61,7 @@ public class MapNaver extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.fragment_naver_map, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_favorite, container, false);
         return rootView;
     }
-
 }

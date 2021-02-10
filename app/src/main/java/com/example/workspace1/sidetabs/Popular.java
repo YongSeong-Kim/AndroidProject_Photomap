@@ -1,4 +1,4 @@
-package com.example.workspace1;
+package com.example.workspace1.sidetabs;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.workspace1.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Favorite#newInstance} factory method to
+ * Use the {@link Popular#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Favorite extends Fragment {
+public class Popular extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class Favorite extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Favorite() {
+    public Popular() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class Favorite extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment favorite.
+     * @return A new instance of fragment Popular.
      */
     // TODO: Rename and change types and number of parameters
-    public static Favorite newInstance(String param1, String param2) {
-        Favorite fragment = new Favorite();
+    public static Popular newInstance(String param1, String param2) {
+        Popular fragment = new Popular();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,7 +61,7 @@ public class Favorite extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_favorite, container, false);
+        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.fragment_popular, container, false);
         return rootView;
     }
 }
