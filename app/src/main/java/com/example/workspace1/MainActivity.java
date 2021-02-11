@@ -200,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (marker.getInfoWindow() == null)
             {
-
                 infoWindow.open(marker);
             }
             else

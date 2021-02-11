@@ -1,4 +1,4 @@
-package com.example.workspace1;
+package com.example.workspace1.utility;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.workspace1.R;
 import com.example.workspace1.user.LoginActivity;
 
 public class LoadingActivity extends AppCompatActivity {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:background="@color/white"
-    tools:context=".LoadingActivity">
+    tools:context=".utility.LoadingActivity">
 
     <ImageView
         android:id="@+id/imageView2"
