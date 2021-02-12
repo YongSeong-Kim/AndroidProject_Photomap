@@ -82,7 +82,7 @@ public class PhotoRegister extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {//사진 잘가져오는지.
         if(requestCode == REQUEST_CODE)
         {
             if(resultCode == RESULT_OK) {
@@ -93,7 +93,6 @@ public class PhotoRegister extends Activity {
                     //Uri -->절대경로(String)로 변환
                     imgPath = getRealPathFromUri(uri);
                     Toast.makeText(this, imgPath, Toast.LENGTH_LONG).show();
-
                 }
             }
             else if(resultCode == RESULT_CANCELED)
@@ -140,9 +139,11 @@ public class PhotoRegister extends Activity {
 
     public void upload() throws IOException {
 
+        Intent FromMainIntent = getIntent();
+        Double latitude = FromMainIntent.getDoubleExtra("latitude",0);
+        Double longtitude = FromMainIntent.getDoubleExtra("longtitude",0);
 
         URL url = new URL("http://10.0.2.2:8000/photo/post/");
-
 
         con = (HttpURLConnection) url.openConnection();
         con.setDoInput(true);
@@ -158,13 +159,13 @@ public class PhotoRegister extends Activity {
         wr.writeBytes(twoHyphens + boundary + crlf);
         wr.writeBytes("Content-Disposition: form-data; name=\"latitude\"" + crlf+crlf);
 
-        wr.writeBytes("10" + crlf);
+        wr.writeBytes(latitude + crlf);
 
 
         wr.writeBytes(twoHyphens + boundary + crlf);
         wr.writeBytes("Content-Disposition: form-data; name=\"longtitude\"" + crlf+crlf);
 
-        wr.writeBytes("10" + crlf);
+        wr.writeBytes(longtitude + crlf);
 
         InputStream in = getContentResolver().openInputStream(temp.getData());
 
@@ -175,7 +176,7 @@ public class PhotoRegister extends Activity {
         byte[] bytes = stream.toByteArray();
 
         wr.writeBytes(twoHyphens + boundary + crlf);
-        wr.writeBytes("Content-Disposition: form-data; name=\"image\";filename=\" good.png\""+crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"image\";filename=\"" + imgPath + crlf);
         wr.writeBytes("Content-Type:image/png" + crlf);
         wr.writeBytes(crlf);
         wr.write(bytes);
@@ -200,6 +201,18 @@ public class PhotoRegister extends Activity {
 
         Log.d("상태코드", Integer.toString(status));
 
+        Intent intent = new Intent();
+        if(status == 200)
+        {
+            intent.putExtra("latitude",latitude);
+            intent.putExtra("longtitude",longtitude);
+            this.setResult(1,intent);
+
+        }
+        else
+        {
+            this.setResult(2,intent);
+        }
         finish();
     }
 

@@ -1,6 +1,7 @@
 package com.example.workspace1;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -35,15 +36,19 @@ import com.naver.maps.map.widget.LocationButtonView;
 import com.naver.maps.map.widget.ScaleBarView;
 import com.naver.maps.map.widget.ZoomControlView;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
+
     private Context context = this;
     Fragment MapNaver, Account, Favorite, Feed, Popular, Setting;
     Toolbar toolbar;
     private FusedLocationSource mLocationSource;
     private NaverMap mNaverMap;
+    private static ArrayList<Marker> markArray = new ArrayList<Marker>();
+    private static ArrayList<LatLng> markLatLng = new ArrayList<LatLng>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,21 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mNaverMap = naverMap;
 
         InfoWindow infoWindow = new InfoWindow();
-        Marker marker1 = new Marker();
-        marker1.setPosition(new LatLng(37.5670135, 126.9783740));
-        marker1.setMap(mNaverMap);
-        marker1.setWidth(100);
-        marker1.setHeight(100);
-        marker1.setIcon(OverlayImage.fromResource(R.drawable.marker));
-
-
-        Marker marker2 = new Marker();
-        marker2.setPosition(new LatLng(37.56, 126.97));
-        marker2.setMap(mNaverMap);
-        marker2.setWidth(100);
-        marker2.setHeight(100);
-        marker2.setIcon(OverlayImage.fromResource(R.drawable.marker));
-
 
         mNaverMap.setOnMapClickListener((coord,point)->{//지도를 클릭하면 닫.
             infoWindow.close();
@@ -204,15 +194,49 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             {
                 infoWindow.open(marker);
             }
-            else
-            {
-                infoWindow.close();
-            }
+            else infoWindow.close();
+
             return true;
         };
 
-        marker1.setOnClickListener(listener);
-        marker2.setOnClickListener(listener);
+        if(markLatLng.size()>0) {
+            for (int i = 0; i < markLatLng.size(); i++) {
+                Marker marker = new Marker();
+                marker.setPosition(markLatLng.get(i));
+                marker.setMap(mNaverMap);
+                marker.setWidth(100);
+                marker.setHeight(100);
+                marker.setIcon(OverlayImage.fromResource(R.drawable.marker));
+                markArray.add(marker);
+//                markArray.get(i).setMap(naverMap);
+            }
+
+            for(int i = 0; i< markLatLng.size(); i++)
+            {
+                markArray.get(i).setOnClickListener(listener);
+            }
+        }
+//        Marker marker1 = new Marker();
+//        marker1.setPosition(new LatLng(37.5670135, 126.9783740));
+//        marker1.setMap(mNaverMap);
+//        marker1.setWidth(100);
+//        marker1.setHeight(100);
+//        marker1.setIcon(OverlayImage.fromResource(R.drawable.marker));
+//
+//
+//        Marker marker2 = new Marker();
+//        marker2.setPosition(new LatLng(37.56, 126.97));
+//        marker2.setMap(mNaverMap);
+//        marker2.setWidth(100);
+//        marker2.setHeight(100);
+//        marker2.setIcon(OverlayImage.fromResource(R.drawable.marker));
+
+
+
+
+
+//        marker1.setOnClickListener(listener);
+//        marker2.setOnClickListener(listener);
 
 
         infoWindow.setAdapter(new InfoWindow.DefaultViewAdapter(this) {
@@ -241,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent intent = new Intent(MainActivity.this, PhotoRegister.class);
                 intent.putExtra("latitude",latLng.latitude);
                 intent.putExtra("longtitude",latLng.longitude);
-                startActivity(intent);
+                startActivityForResult(intent,1234);
             }
         });
 
@@ -267,6 +291,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 requestCode, permissions, grantResults);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // PhotoRegister에서 저장한 사진의 마커를 찍어줌.
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+//            Marker marker = new Marker();
+            Log.d("상태코드", "여기");
+            Double templatitude = data.getDoubleExtra("latitude", 0);
+            Double templongtitude = data.getDoubleExtra("longtitude", 0);
+            Toast.makeText(context, templatitude+ "\n" +templongtitude, Toast.LENGTH_SHORT).show();
+            markLatLng.add(new LatLng(templatitude, templongtitude));
 
 
+//            markArray.add(marker);
+        } else if (resultCode == 2) {
+
+        }
+    }
 }
