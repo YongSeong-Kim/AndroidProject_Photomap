@@ -1,4 +1,4 @@
-package com.example.workspace1;
+package com.example.workspace1.map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,13 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.workspace1.R;
+import org.json.JSONException;
+import org.json.JSONObject;
 import com.android.volley.toolbox.StringRequest;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -143,7 +149,7 @@ public class PhotoRegister extends Activity {
         Double latitude = FromMainIntent.getDoubleExtra("latitude",0);
         Double longtitude = FromMainIntent.getDoubleExtra("longtitude",0);
 
-        URL url = new URL("http://10.0.2.2:8000/photo/post/");
+        URL url = new URL("http://"+getString(R.string.ip)+":8000/photo/post/");
 
         con = (HttpURLConnection) url.openConnection();
         con.setDoInput(true);
@@ -166,6 +172,18 @@ public class PhotoRegister extends Activity {
         wr.writeBytes("Content-Disposition: form-data; name=\"longtitude\"" + crlf+crlf);
 
         wr.writeBytes(longtitude + crlf);
+
+
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"title\"" + crlf+crlf);
+
+        wr.writeBytes("test_title._123" + crlf);
+
+
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"content\"" + crlf+crlf);
+
+        wr.writeBytes("test_content" + crlf);
 
         InputStream in = getContentResolver().openInputStream(temp.getData());
 

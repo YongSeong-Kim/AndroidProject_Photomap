@@ -1,4 +1,4 @@
-package com.example.workspace1;
+package com.example.workspace1.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,10 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import com.android.volley.*;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.workspace1.R;
 
 
 import org.json.JSONException;
@@ -52,38 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String url =  "http://10.0.2.2:8000/user/signin/";
-                String base_url =  "http://10.0.2.2:8000";
-
-
-
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl(base_url)
-//                        .addConverterFactory(ScalarsConverterFactory.create())
-//                        .build();
-//
-//                FileUploadAPI api = retrofit.create(FileUploadAPI.class);
-//
-//                HashMap<String, String> params = new HashMap<String, String>();
-//                params.put("username", r_name.getText().toString());
-//                params.put("email", r_email.getText().toString());
-//                params.put("password", r_pass.getText().toString());
-//
-//
-//                api.getUserRegister(params).enqueue(new Callback<RegisterValue>() {
-//                    @Override
-//                    public void onResponse(Call<RegisterValue> call, Response<RegisterValue> response) {
-//                        if(response.isSuccessful())
-//                        {
-//                            Log.e("onSuccess", response.message());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<RegisterValue> call, Throwable t) {
-//                        Log.e("fail", call.toString());
-//                    }
-//                });
+                String url = "http://"+getString(R.string.ip)+":8000/user/signin/";
+                String base_url = "http://"+getString(R.string.ip)+":8000/";
 
 
                 Map<String, String> params = new HashMap<String, String>();

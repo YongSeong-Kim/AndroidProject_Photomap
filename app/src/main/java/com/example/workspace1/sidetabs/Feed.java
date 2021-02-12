@@ -1,4 +1,4 @@
-package com.example.workspace1;
+package com.example.workspace1.sidetabs;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.workspace1.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Setting#newInstance} factory method to
+ * Use the {@link Feed#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Setting extends Fragment {
+public class Feed extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class Setting extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Setting() {
+    public Feed() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class Setting extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Setting.
+     * @return A new instance of fragment Feed.
      */
     // TODO: Rename and change types and number of parameters
-    public static Setting newInstance(String param1, String param2) {
-        Setting fragment = new Setting();
+    public static Feed newInstance(String param1, String param2) {
+        Feed fragment = new Feed();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,7 +61,7 @@ public class Setting extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) getLayoutInflater().inflate(R.layout.fragment_setting, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_feed, container, false);
         return rootView;
     }
 }
