@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncTaskCallbac
             @Override
             public void onClick(View v) {
 
-                String url = "http://"+getString(R.string.ip)+":8000/user/login/";
+                String url = "http://"+getString(R.string.ipport)+"/user/login/";
                 String method = "POST";
 
                 //POST-body에 들어가는 jsonobject 생성

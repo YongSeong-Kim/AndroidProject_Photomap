@@ -51,7 +51,8 @@ public class RegisterActivity extends AppCompatActivity implements AsyncTaskCall
             @Override
             public void onClick(View v) {
 
-                String url = "http://"+getString(R.string.ip)+":8000/user/signin/";
+
+                String url = "http://"+getString(R.string.ipport)+"/user/signup/";
                 String method = "POST";
 
                 Map<String, String> params = new HashMap<String, String>();
