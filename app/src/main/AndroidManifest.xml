@@ -2,14 +2,39 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.workspace1">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_apple"
-        android:label="@string/app_name"
+        android:label="Photomap"
         android:roundIcon="@mipmap/ic_launcher_apple_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Workspace1">
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Workspace1"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
+        <!--
+
+        -->
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="696vjh50sy"/>
+
+
+        <activity android:name=".user.RegisterActivity"></activity>
+        <activity android:name=".user.LoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".map.PhotoRegister"
+            android:theme="@android:style/Theme.Holo.Dialog"/>
+
+        <activity android:name=".utility.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
