@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import com.example.workspace1.sidetabs.Setting;
 import com.example.workspace1.map.MapNaver;
 import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.*;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
@@ -40,6 +43,16 @@ import com.naver.maps.map.widget.CompassView;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.naver.maps.map.widget.ScaleBarView;
 import com.naver.maps.map.widget.ZoomControlView;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -53,7 +66,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationSource mLocationSource;
     private NaverMap mNaverMap;
     private static ArrayList<Marker> markArray = new ArrayList<Marker>();
+    private static ArrayList<InfoWindow> markInfoWindow = new ArrayList<InfoWindow>();
     private static ArrayList<LatLng> markLatLng = new ArrayList<LatLng>();
+    OverlayOnClickListener onOverlayClickListener = new OverlayOnClickListener() ;
+
+    HttpURLConnection con = null;
+    String boundary = "******";
+    String crlf = "\r\n";
+    String twoHyphens = "--";
+    OutputStream httpConnOutputStream;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
              }
          });
 
+
         MapNaver = new MapNaver();
         Account = new Account();
         Favorite = new Favorite();
@@ -93,10 +116,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         mLocationSource =
                 new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-
-
-
-
 
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -154,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         FragmentManager fm = getSupportFragmentManager();
                         MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
                         if (mapFragment == null) {
-                            Log.d("dd","dd");
                             mapFragment = MapFragment.newInstance();
                         }
                         mapFragment.getMapAsync(this);
@@ -185,87 +203,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mNaverMap = naverMap;
 
-        InfoWindow infoWindow = new InfoWindow();
-
-        mNaverMap.setOnMapClickListener((coord,point)->{//지도를 클릭하면 닫.
-            infoWindow.close();
-        });
-
-        Overlay.OnClickListener listener = overlay ->// 마커를 클릭하면 열리고 아니면 닫힘.
-        {
-            Marker marker = (Marker) overlay;
-
-            if (marker.getInfoWindow() == null)
-            {
-                infoWindow.open(marker);
-            }
-            else infoWindow.close();
-
-            return true;
-        };
-
-        if(markLatLng.size()>0) {
-            for (int i = 0; i < markLatLng.size(); i++) {
-                Marker marker = new Marker();
-                marker.setPosition(markLatLng.get(i));
-                marker.setMap(mNaverMap);
-                marker.setWidth(100);
-                marker.setHeight(100);
-                marker.setIcon(OverlayImage.fromResource(R.drawable.marker));
-                markArray.add(marker);
-//                markArray.get(i).setMap(naverMap);
-            }
-
-            for(int i = 0; i< markLatLng.size(); i++)
-            {
-                markArray.get(i).setOnClickListener(listener);
-            }
+        if(markArray.size()>0) {
+            updateMarkers();
         }
-//        Marker marker1 = new Marker();
-//        marker1.setPosition(new LatLng(37.5670135, 126.9783740));
-//        marker1.setMap(mNaverMap);
-//        marker1.setWidth(100);
-//        marker1.setHeight(100);
-//        marker1.setIcon(OverlayImage.fromResource(R.drawable.marker));
-//
-//
-//        Marker marker2 = new Marker();
-//        marker2.setPosition(new LatLng(37.56, 126.97));
-//        marker2.setMap(mNaverMap);
-//        marker2.setWidth(100);
-//        marker2.setHeight(100);
-//        marker2.setIcon(OverlayImage.fromResource(R.drawable.marker));
 
 
-
-
-
-//        marker1.setOnClickListener(listener);
-//        marker2.setOnClickListener(listener);
-
-
-        infoWindow.setAdapter(new InfoWindow.DefaultViewAdapter(this) {
-            @NonNull
+        mNaverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
-            protected View getContentView(@NonNull InfoWindow infoWindow) {
+            public void onCameraChange(int i, boolean b) {
+                if(markArray.size()>0) {
+                    updateMarkers();
+                }
 
-                View view = View.inflate(MainActivity.this, R.layout.photo_point, null);
-                TextView txtTitle = (TextView) view.findViewById(R.id.txttitle);
-                ImageView imagePoint = (ImageView) view.findViewById(R.id.imagepoint);
-
-                txtTitle.setText("강릉");
-                imagePoint.setImageResource(R.drawable.example);
-
-                return view;
             }
         });
+
+
 
 
         naverMap.setOnMapLongClickListener(new NaverMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
 
-                Toast.makeText(context, latLng.longitude+ "\n" +latLng.latitude, Toast.LENGTH_SHORT).show();
+
+//                CameraPosition cameraPosition = mNaverMap.getCameraPosition();
+//
+//                System.out.println(latLng.distanceTo(cameraPosition.target.toLatLng()));
+//                Log.d("Camera position", cameraPosition.target.latitude +" "+ cameraPosition.target.longitude);
+//                Log.d("Click position",latLng.latitude + " " + latLng.longitude);
+
 
                 Intent intent = new Intent(MainActivity.this, PhotoRegister.class);
                 intent.putExtra("latitude",latLng.latitude);
@@ -281,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mNaverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
 
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -298,21 +265,161 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // PhotoRegister에서 저장한 사진의 마커를 찍어줌.
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
-//            Marker marker = new Marker();
+        if (resultCode == 1) { // PhotoRegister에서 저장한 사진의 마커가 제대로 저장된다면 marker 설정.
+            Marker marker = new Marker();
             Log.d("상태코드", "여기");
             Double templatitude = data.getDoubleExtra("latitude", 0);
             Double templongtitude = data.getDoubleExtra("longtitude", 0);
             Toast.makeText(context, templatitude+ "\n" +templongtitude, Toast.LENGTH_SHORT).show();
-            markLatLng.add(new LatLng(templatitude, templongtitude));
+            marker.setPosition(new LatLng(templatitude, templongtitude));
+            marker.setMap(mNaverMap);
+            marker.setWidth(100);
+            marker.setHeight(100);
 
+            Overlay o = (Overlay) marker;
+//            o.setMinZoom(15);
+//            o.setMinZoomInclusive(true);
 
-//            markArray.add(marker);
+            marker.setIcon(OverlayImage.fromResource(R.drawable.marker));
+            markArray.add(marker);
+
+            marker.setOnClickListener(onOverlayClickListener);
+
         } else if (resultCode == 2) {
 
         }
     }
+
+    public void tryTo(View view) {
+
+        CameraPosition cameraPosition = mNaverMap.getCameraPosition();
+        System.out.println(cameraPosition.target.latitude +" "+ cameraPosition.target.longitude);
+
+
+
+        LatLngBounds l = mNaverMap.getContentBounds();//지도 콘텐츠 영역에 대한 LatlngBounds를 반환.
+        System.out.println(l.contains(new LatLng(37.5567, 126.9860)));
+
+//        URL url = null;
+//        try {
+//            url = new URL("http://"+getString(R.string.ip)+":8000/photo/post/");
+//            con = (HttpURLConnection) url.openConnection();
+//            con.setDoInput(true);
+//            con.setDoOutput(true);
+//            con.setUseCaches(false);
+//            con.setRequestMethod("GET");
+//            con.setRequestProperty("Connection", "Keep-Alive");
+//            con.setRequestProperty("Cache-Control", "no-cache");
+////            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+//
+////            int status = con.getResponseCode();
+//
+//            InputStream responseStream = new BufferedInputStream(con.getInputStream());
+//            BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+//            String line = "";
+//            StringBuilder stringBuilder = new StringBuilder();
+//            while((line = responseStreamReader.readLine()) !=null)
+//            {
+//                stringBuilder.append(line).append("\n");
+//            }
+//            responseStreamReader.close();
+//            String s = stringBuilder.toString();
+//
+//            Toast.makeText(this, s , Toast.LENGTH_LONG).show();
+//
+//
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+    }
+
+    public void  updateMarkers()
+    {
+        LatLngBounds mapBounds = mNaverMap.getContentBounds();//지도 콘텐츠 영역에 대한 LatlngBounds를 반환.
+        for(int i = 0; i < markArray.size(); i++)
+        {
+            if(mapBounds.contains(markArray.get(i).getPosition()))
+            {
+                markArray.get(i).setMap(mNaverMap);
+                markArray.get(i).setOnClickListener(onOverlayClickListener );
+            }
+            else
+            {
+                markArray.get(i).setMap(null);//마커 안보이도록.
+            }
+        }
+
+    }
+
+    class OverlayOnClickListener implements Overlay.OnClickListener {
+
+        int index;// pirmary키를 서버에서 받아와서 삭제하면 될듯.
+        InfoWindow infoWindow = new InfoWindow();
+
+
+        @Override
+        public boolean onClick(@NonNull Overlay overlay) {
+
+            Marker marker = (Marker) overlay;
+            mNaverMap.setOnMapClickListener((coord,point)->{//지도를 클릭하면 닫.
+                infoWindow.close();
+            });
+
+            if (marker.getInfoWindow() == null)
+            {
+                infoWindow.open(marker);
+
+
+
+            }
+            else infoWindow.close();
+
+
+//            overlay.setMaxZoom(14);
+//            overlay.setMaxZoomInclusive(true);
+
+
+
+            infoWindow.setAdapter(new InfoWindow.DefaultViewAdapter(getApplicationContext()) {
+                @NonNull
+                @Override
+                protected View getContentView(@NonNull InfoWindow infoWindow) {
+
+                    View view = View.inflate(MainActivity.this, R.layout.photo_point, null);
+
+                    TextView txtTitle = (TextView) view.findViewById(R.id.txttitle);
+
+                    ImageView imagePoint = (ImageView) view.findViewById(R.id.imagepoint);
+
+                    txtTitle.setText("강릉");
+                    imagePoint.setImageResource(R.drawable.example);
+
+//                    infoWindow.setOnClickListener(new Overlay.OnClickListener() {
+//                        @Override
+//                        public boolean onClick(@NonNull Overlay overlay) {
+//                            System.out.println("삭재.");
+//
+//                            return true;
+//                        }
+//                    });
+
+                    System.out.println(txtTitle);
+                    System.out.println(imagePoint);
+//                    System.out.println(photo_delete);
+                    return view;
+                }
+            });
+
+
+
+
+            return true;
+        }
+    }
+
 }

@@ -8,15 +8,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:background="@drawable/ic_launcher_foreground"
             android:layout_gravity="center"
             android:layout_margin="2dp" />
+
         <TextView
             android:id="@+id/txttitle"
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
@@ -25,6 +27,9 @@
             android:text="포인트 지점명"
             android:textSize="14dp"
             android:textStyle="bold" />
+
+
+
     </LinearLayout>
 
     <View
@@ -32,7 +37,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@android:color/holo_orange_dark" />
+        android:background="@android:color/black" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,3 +96,11 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+
+
+<!--<TextView-->
+<!--android:id="@+id/deletePhoto"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:text="삭제"-->
+<!--android:textStyle="bold"/>-->

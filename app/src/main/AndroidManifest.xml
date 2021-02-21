@@ -30,11 +30,12 @@
 
         <activity android:name=".user.RegisterActivity"></activity>
         <activity android:name=".user.LoginActivity" />
-        <activity android:name=".MainActivity" />
+
+        <activity android:name=".utility.LoadingActivity" />
         <activity android:name=".map.PhotoRegister"
             android:theme="@android:style/Theme.Holo.Dialog"/>
 
-        <activity android:name=".utility.LoadingActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -185,6 +185,11 @@ public class PhotoRegister extends Activity {
 
         wr.writeBytes("test_content" + crlf);
 
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"author\"" + crlf+crlf);
+
+        wr.writeBytes("Kim" + crlf);
+
         InputStream in = getContentResolver().openInputStream(temp.getData());
 
         Bitmap bitmap = BitmapFactory.decodeStream(in);
