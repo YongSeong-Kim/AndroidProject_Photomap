@@ -86,10 +86,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncTaskCallbac
     public void method2(String s) {
 
         System.out.println("now response : " + s);
-        JsonParser jsonParser = new JsonParser();
-        JsonObject collections = (JsonObject) jsonParser.parse(s);
 
-        String verified = collections.get("message").getAsString();
+        //JsonParser jsonParser = new JsonParser();
+        //JsonObject collections = (JsonObject) jsonParser.parse(s);
+        //String verified = collections.get("message").getAsString();
+        String verified = s.substring(8,15);
+        System.out.println("verified :  " + verified);
 
 
         if(verified.equals("SUCCESS"))

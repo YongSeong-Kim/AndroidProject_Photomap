@@ -229,6 +229,11 @@ public class PhotoRegister extends Activity {
 
         wr.writeBytes("test_content" + crlf);
 
+        wr.writeBytes(twoHyphens + boundary + crlf);
+        wr.writeBytes("Content-Disposition: form-data; name=\"author\"" + crlf+crlf);
+
+        wr.writeBytes("test_author" + crlf);
+
 //        Uri myUri = Uri.parse(tempFile.getAbsolutePath());
 //        InputStream in = getContentResolver().openInputStream(myUri);
         InputStream in = getContentResolver().openInputStream(temp.getData());
