@@ -1,13 +1,19 @@
 package com.example.workspace1.map;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +47,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -57,6 +65,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PhotoRegister extends Activity {
     private static final int REQUEST_CODE = 0;
     private ImageView imageView;
+    private File tempFile;
     String imgPath;
     private RequestQueue queue;
     HttpURLConnection con = null;
@@ -79,10 +88,18 @@ public class PhotoRegister extends Activity {
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, REQUEST_CODE);
+//                startActivityForResult(getPickImageChooserIntent(), REQUEST_CODE);
+//                Intent intent = new Intent();
+//                intent.setAction(Intent.ACTION_GET_CONTENT); // ACTION_PICK은 사용하지 말것, deprecated + formally
+//                intent.setType("image/*");
+//                startActivityForResult(Intent.createChooser(intent, "Get Album"), REQUEST_CODE);
             }
         });
     }
@@ -92,14 +109,38 @@ public class PhotoRegister extends Activity {
         if(requestCode == REQUEST_CODE)
         {
             if(resultCode == RESULT_OK) {
+                System.out.println("getdata:"+ data.getData().toString());
+                imgPath = getRealPathFromUri(data.getData());
+
+                File file = new File(imgPath);
                 temp = data;
-                uri = data.getData();
-                if (uri != null) {
-                    imageView.setImageURI(uri);
-                    //Uri -->절대경로(String)로 변환
-                    imgPath = getRealPathFromUri(uri);
-                    Toast.makeText(this, imgPath, Toast.LENGTH_LONG).show();
+                Bitmap mBitmap = null;
+                if (imgPath != null) {
+                    //Log.v("SDK Version:","sdk_int " +Build.VERSION.SDK_INT);
+
+                    if (Build.VERSION.SDK_INT >= 29){
+                        ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(),Uri.fromFile(file));
+                        try {
+                            mBitmap = ImageDecoder.decodeBitmap(source);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        mBitmap = BitmapFactory.decodeFile(imgPath);
+                        //mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+                    }
+
+                    imageView.setImageBitmap(mBitmap);
                 }
+//                //uri = data.getData();
+//                if (uri != null) {
+//                    imageView.setImageURI(uri);
+//                    //Uri -->절대경로(String)로 변환
+//                    imgPath = getRealPathFromUri(uri);
+//                    System.out.println("imgPath :" + imgPath);
+//                    Toast.makeText(this, imgPath, Toast.LENGTH_LONG).show();
+//                }
             }
             else if(resultCode == RESULT_CANCELED)
             {
@@ -108,6 +149,7 @@ public class PhotoRegister extends Activity {
         }
     }
 
+
     public String getRealPathFromUri(Uri uri){ // 절대경로
             String[] proj= {MediaStore.Images.Media.DATA};
             CursorLoader loader= new CursorLoader(this, uri, proj, null, null, null);
@@ -115,9 +157,11 @@ public class PhotoRegister extends Activity {
             int column_index= cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String result= cursor.getString(column_index);
+            tempFile = new File(cursor.getString(column_index));
             cursor.close();
             return  result;
     }
+
 
     public void mOnClose(View v) throws IOException {
 
@@ -149,7 +193,7 @@ public class PhotoRegister extends Activity {
         Double latitude = FromMainIntent.getDoubleExtra("latitude",0);
         Double longtitude = FromMainIntent.getDoubleExtra("longtitude",0);
 
-        URL url = new URL("http://"+getString(R.string.ip)+":8000/photo/post/");
+        URL url = new URL("http://"+getString(R.string.ipport)+"/photo/post/");
 
         con = (HttpURLConnection) url.openConnection();
         con.setDoInput(true);
@@ -185,8 +229,14 @@ public class PhotoRegister extends Activity {
 
         wr.writeBytes("test_content" + crlf);
 
+//        Uri myUri = Uri.parse(tempFile.getAbsolutePath());
+//        InputStream in = getContentResolver().openInputStream(myUri);
         InputStream in = getContentResolver().openInputStream(temp.getData());
 
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        Bitmap bitmap = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+
+//        System.out.println("사진의 절대위치 " + tempFile.getAbsolutePath());
         Bitmap bitmap = BitmapFactory.decodeStream(in);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

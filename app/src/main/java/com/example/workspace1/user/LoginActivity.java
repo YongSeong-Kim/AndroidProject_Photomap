@@ -57,18 +57,21 @@ public class LoginActivity extends AppCompatActivity implements AsyncTaskCallbac
             @Override
             public void onClick(View v) {
 
-                String url = "http://"+getString(R.string.ip)+":8000/user/login/";
+                String url = "http://"+getString(R.string.ipport)+"/user/login/";
                 String method = "POST";
 
                 //POST-body에 들어가는 jsonobject 생성
                 Map<String, String> params = new HashMap<String, String>();
                 Log.d("유저네임", "들어갑니다.");
                 params.put("username", l_id.getText().toString());
-                //Log.d("test", l_id.getText().toString());
                 params.put("email", "");
                 params.put("password", l_pass.getText().toString());
-                //Log.d("test", l_pass.getText().toString());
                 JSONObject parameters = new JSONObject(params);
+
+                /// FOR DEBUG ///
+                //Log.d("test", l_id.getText().toString());
+                //Log.d("test", l_pass.getText().toString());
+                /// FOR DEBUG ///
 
                 //NetworkTaskAsync 호출로 login 요청하기
                 NetworkTask networkTask = new NetworkTask(url, null, method ,parameters, LoginActivity.this);
@@ -98,6 +101,5 @@ public class LoginActivity extends AppCompatActivity implements AsyncTaskCallbac
         else { // 로그인에 실패한 경우
             Toast.makeText(getApplicationContext(),"로그인에 실패하였습니다.",Toast.LENGTH_SHORT).show();
         }
-
     }
 }
